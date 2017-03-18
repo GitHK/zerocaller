@@ -6,7 +6,7 @@ Is a zeroMQ implementation for RPC.
 
 Use the `ZeroAwaiter` and a `ZeroRequester` to await for commands and issue requests.
  
-Check out the [examples folder](../examples) for more details.
+Check out the [examples folder](https://github.com/GitHK/zerocaller/tree/master/zerocaller) for more details.
 
 ## Awaiter
 
