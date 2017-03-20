@@ -1,4 +1,5 @@
 import pickle
+import traceback
 
 import zlib
 import zmq
@@ -28,7 +29,7 @@ def recv_zipped_pickle(socket, flags=0, protocol=-1):
 class ZeroAwaiter:
     """ Based on the zermq server that is always waiting for commands to be executed. """
 
-    def __init__(self, port=5566):
+    def __init__(self, port=5566, debug=False):
         """
         Listen for actions from remote requesters.
 
@@ -36,6 +37,7 @@ class ZeroAwaiter:
         """
         self.port = port
         self.handlers = dict()
+        self.debug = debug
 
     def _process_request(self):
         context = zmq.Context()
@@ -71,8 +73,10 @@ class ZeroAwaiter:
             response_payload = self.handlers[command](payload)
             return {KEY_STATUS: STATUS_OK, KEY_PAYLOAD: response_payload}
         except Exception as e:
-            # should capture stacktrace end print it
-            return {KEY_STATUS: STATUS_ERROR, KEY_PAYLOAD: str(e)}
+            trace = traceback.format_exc()
+            if self.debug:
+                print(trace)
+            return {KEY_STATUS: STATUS_ERROR, KEY_PAYLOAD: dict(trace=trace, error=str(e))}
 
 
 class ZeroRequester:
@@ -100,4 +104,5 @@ class ZeroRequester:
         if response[KEY_STATUS] == STATUS_OK:
             return response[KEY_PAYLOAD]
         else:
-            raise Exception("%s: %s" % (response[KEY_STATUS], response[KEY_PAYLOAD]))
+            print(">>>\nFROM REMOTE:\n%s<<<\n" % response[KEY_PAYLOAD]['trace'])
+            raise Exception("%s: %s" % (response[KEY_STATUS], response[KEY_PAYLOAD]['error']))

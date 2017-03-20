@@ -5,7 +5,7 @@ def say_hello_handler(payload):
     return "Hello %s!" % payload
 
 
-awaiter = ZeroAwaiter()
+awaiter = ZeroAwaiter(debug=True)
 awaiter.register_handler('say_hello', say_hello_handler)
 awaiter.handle_requests_forever()
 
