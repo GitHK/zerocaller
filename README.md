@@ -2,7 +2,7 @@
 
 Is a zeroMQ implementation for RPC.
 
-# Usage
+# RTC style operations
 
 Use the `ZeroAwaiter` and a `ZeroRequester` to await for commands and issue requests.
  
@@ -41,3 +41,35 @@ with the name provided at registration time and a picklable object as a payload.
 
 
 
+# Async operatons
+
+Use the `ZeroSender` and a `ZeroReceiver` to issue asynchronous requests.
+
+Check out the [examples folder](https://github.com/GitHK/zerocaller/tree/master/examples) for more details.
+
+
+## Receiver
+
+Define a callback that can be called by multiple senders.
+
+    from zerocaller.zero_async import ZeroReceiver
+    
+    
+    def say_hello(payload):
+        print('Hello %s!' % payload)
+    
+    
+    receiver = ZeroReceiver()
+    receiver.register_handler('hello', say_hello)
+    
+    receiver.receive_action()
+
+
+## Sender
+
+Used to send a custom action mapped on the `receiver`.
+
+    from zerocaller.zero_async import ZeroSender
+    
+    sender = ZeroSender()
+    sender.send_action('hello', 'Zero the user!')

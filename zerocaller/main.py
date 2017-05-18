@@ -1,8 +1,8 @@
-import pickle
 import traceback
 
-import zlib
 import zmq
+
+from zerocaller.utils import recv_zipped_pickle, send_zipped_pickle
 
 STATUS_ERROR = 'error'
 STATUS_OK = 'ok'
@@ -10,20 +10,6 @@ STATUS_OK = 'ok'
 KEY_COMMAND = 'command'
 KEY_PAYLOAD = 'payload'
 KEY_STATUS = 'status'
-
-
-def send_zipped_pickle(socket, obj, flags=0, protocol=-1):
-    """pickle an object, and zip the pickle before sending it"""
-    pickled_object = pickle.dumps(obj, protocol)
-    compressed = zlib.compress(pickled_object)
-    return socket.send(compressed, flags=flags)
-
-
-def recv_zipped_pickle(socket, flags=0, protocol=-1):
-    """inverse of send_zipped_pickle"""
-    compressed = socket.recv(flags)
-    pickled_object = zlib.decompress(compressed)
-    return pickle.loads(pickled_object)
 
 
 class ZeroAwaiter:
