@@ -2,6 +2,8 @@ import traceback
 
 import zmq
 
+from zerocaller.utils import send_zipped_pickle, recv_zipped_pickle
+
 ACTION = 'command'
 PAYLOAD = 'payload'
 
@@ -24,7 +26,7 @@ class ZeroSender:
             ACTION: action,
             PAYLOAD: payload
         }
-        self.producer.send_pyobj(message)
+        send_zipped_pickle(self.producer, message)
 
 
 class ZeroReceiver:
@@ -61,7 +63,7 @@ class ZeroReceiver:
                 print(trace)
 
     def receive_action(self):
-        self._handle_action(self.consumer.recv_pyobj())
+        self._handle_action(recv_zipped_pickle(self.consumer))
 
     def receive_forever(self):
         while True:
