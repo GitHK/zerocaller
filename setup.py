@@ -3,7 +3,7 @@ from distutils.core import setup
 
 setup(
     name='zerocaller',
-    version='0.0.3',
+    version='0.0.4',
     packages=['zerocaller'],
     install_requires=[
         "pyzmq"
