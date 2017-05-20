@@ -1,7 +1,5 @@
 import traceback
 
-import zmq
-
 from zerocaller.utils import send_zipped_pickle, recv_zipped_pickle
 
 ACTION = 'command'
@@ -13,9 +11,14 @@ class ZeroSender:
     Used to send a request to the remote backend to be executed
     """
 
-    def __init__(self, host='127.0.0.1', port=5678):
+    def __init__(self, host='127.0.0.1', port=5678, gevent_support=False):
         self.host = host
         self.port = port
+        self.gevent_support = gevent_support
+        if gevent_support:
+            import zmq.green as zmq
+        else:
+            import zmq
 
         self.context = zmq.Context()
         self.producer = self.context.socket(zmq.PUSH)
@@ -34,10 +37,15 @@ class ZeroReceiver:
     Used receive an action to process
     """
 
-    def __init__(self, host='127.0.0.1', port=5678, debug=False):
+    def __init__(self, host='127.0.0.1', port=5678, debug=False, gevent_support=False):
         self.host = host
         self.port = port
         self.debug = debug
+        self.gevent_support = gevent_support
+        if gevent_support:
+            import zmq.green as zmq
+        else:
+            import zmq
 
         self.context = zmq.Context()
         self.consumer = self.context.socket(zmq.PULL)
