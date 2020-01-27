@@ -2,6 +2,21 @@
 
 Is a zeroMQ implementation for RPC.
 
+# Installing
+
+Command line:
+
+    pip install git+https://github.com/GitHK/zerocaller.git@master#egg=zerocaller-0.0.6
+
+Via setup.py requirements:
+
+    install_requires=[
+        ...
+        "zerocaller @ git+https://github.com/GitHK/zerocaller.git@master#egg=zerocaller-0.0.6",
+        ...
+    ]
+  
+
 # RTC style operations
 
 Use the `ZeroAwaiter` and a `ZeroRequester` to await for commands and issue requests.
